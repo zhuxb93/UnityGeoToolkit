@@ -1,6 +1,6 @@
 # UnityGeoToolkit
 
-[中文](README.zh-CN.md)
+[Chinese](README.zh-CN.md)
 
 UnityGeoToolkit is a personal geospatial toolkit archive for Unity 6000. It collects reusable building blocks that repeatedly appear in geospatial content production and runtime visualization: 64-bit native containers, binary serialization, double-precision geospatial math, editor import frameworks, terrain repair, road generation, radar voxelization, 3D Tiles loading, and scene utilities.
 
