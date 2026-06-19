@@ -1,0 +1,15 @@
+#pragma kernel CSMain
+StructuredBuffer<float3> _Positions;
+RWStructuredBuffer<int> _NeedsFine;
+float3 _CameraPos;
+float _DistanceThreshold;
+int _PointCount;
+
+[numthreads(64,1,1)]
+void CSMain(uint id : SV_DispatchThreadID)
+{
+    if (id >= _PointCount) return;
+
+    float dist = distance(_Positions[id], _CameraPos);
+    _NeedsFine[id] = dist <= _DistanceThreshold ? 1 : 0;
+}

@@ -1,0 +1,15 @@
+{
+  "name": "com.personal.unity-geo-toolkit",
+  "version": "0.1.0",
+  "displayName": "UnityGeoToolkit",
+  "description": "Unity 地理数据导入、地形处理、道路生成、雷达体素和高性能容器技术积累。",
+  "unity": "6000.0",
+  "license": "MIT",
+  "dependencies": {
+    "com.unity.mathematics": "1.2.0",
+    "com.unity.burst": "1.8.9",
+    "com.unity.collections": "2.5.1",
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.unity.splines": "2.7.2"
+  }
+}
