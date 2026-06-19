@@ -17,7 +17,7 @@ public class Vector3EqualityComparer : IEqualityComparer<Vector3>
 
     public int GetHashCode(Vector3 obj)
     {
-        // �������������ϣ
+        // Quantize coordinates before hashing so nearby points compare consistently.
         int x = Mathf.RoundToInt(obj.x / tolerance);
         int y = Mathf.RoundToInt(obj.y / tolerance);
         int z = Mathf.RoundToInt(obj.z / tolerance);

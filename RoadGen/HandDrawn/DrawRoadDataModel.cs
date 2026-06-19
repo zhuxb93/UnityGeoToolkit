@@ -5,7 +5,7 @@ using UnityEngine.Splines;
 
 namespace GeoToolkit.DrawRoad
 {
-    #region ��ʼ���������
+    #region Source road data
     public enum EndpointType
     {
         Start,
@@ -59,7 +59,7 @@ namespace GeoToolkit.DrawRoad
     }
     #endregion
 
-    #region ���ɿɱ༭���
+    #region Editable junction data
     [Serializable]
     public class JunctionPoint
     {
@@ -110,7 +110,7 @@ namespace GeoToolkit.DrawRoad
     }
     #endregion
 
-    #region �ϲ�mesh���
+    #region Mesh merge data
     public class RoadMeshData
     {
         public Vector3[] vertices;
@@ -148,7 +148,7 @@ namespace GeoToolkit.DrawRoad
     }
     #endregion
 
-    #region ������α༭����
+    #region Serializable vector data
     public struct SerializableVector3
     {
         public float x;
@@ -164,7 +164,7 @@ namespace GeoToolkit.DrawRoad
     }
     #endregion
 
-    #region �����������
+    #region Road facility data
     public enum FacilityType
     {
         Lamp_2,
@@ -250,7 +250,7 @@ namespace GeoToolkit.DrawRoad
     }
     #endregion
 
-    # region ��ͨϵͳ���
+    # region Traffic system data
     public enum LaneType
     {
         Left,

@@ -412,7 +412,7 @@ namespace GeoToolkit.DrawRoad
                         List<int> ids = sips[0].roadIds.Keys.ToList();
                         List<IntersectionInfoData> l1 = intersections.FindAll(a => a.roadIds.ContainsKey(ids[0]));
                         List<IntersectionInfoData> l2 = intersections.FindAll(a => a.roadIds.ContainsKey(ids[1]));
-                        // ����·���������·�ڶ���������·������
+                        // Both roads only touch this intersection, so merge them directly.
                         if (l1.Count == 1 && l2.Count == 1)
                         {
                             RoadInfoData rd1 = roadDict[ids[0]];
@@ -435,7 +435,7 @@ namespace GeoToolkit.DrawRoad
                             roadDict.Remove(rd2.id);
                             intersections.Remove(sips[0]);
                         }
-                        // ����·������һ��·������·������
+                        // The first road ends here; append it to the second road.
                         else if (l1.Count == 1 && l2.Count == 2)
                         {
                             RoadInfoData rd1 = roadDict[ids[0]];
@@ -492,7 +492,7 @@ namespace GeoToolkit.DrawRoad
                             roadDict.Remove(rd2.id);
                             intersections.Remove(sips[0]);
                         }
-                        // ����·��������·������
+                        // Both roads continue through intersections; merge and update neighbors.
                         else if (l1.Count == 2 && l2.Count == 2)
                         {
                             RoadInfoData rd1 = roadDict[ids[0]];
@@ -605,8 +605,8 @@ namespace GeoToolkit.DrawRoad
                     }
                     else
                     {
-                        //�ϲ�
-                        Debug.Log("��Ҫ�ϲ���·:" + roadData.id);
+                        // Mark this road for a later merge pass.
+                        Debug.Log("Road requires merge: " + roadData.id);
                         if (!faultyRoads.Contains(roadData.id))
                         {
                             faultyRoads.Add(roadData.id);
@@ -640,8 +640,8 @@ namespace GeoToolkit.DrawRoad
                     }
                     else
                     {
-                        //�ϲ�
-                        Debug.Log("��Ҫ�ϲ���·:" + roadData.id);
+                        // Mark this road for a later merge pass.
+                        Debug.Log("Road requires merge: " + roadData.id);
                         if (!faultyRoads.Contains(roadData.id))
                         {
                             faultyRoads.Add(roadData.id);

@@ -6,12 +6,12 @@ public class Example : MonoBehaviour
 {
     private void Start()
     {
-        //#region ��·���
+        //#region Road generation
         //string geojson = "";
         //UnwrappedTileId tileId = new UnwrappedTileId(1, 1, 1);
-        //// �����������ɵ�·
+        //// Generate road mesh without terrain fitting.
         //GenerateRoadResult generateRoadResult = SplineRoadLoader.GenerateRoadPrefab(geojson, tileId);
-        //// ���������ɵ�·
+        //// Generate road mesh fitted to terrain.
         //Terrain terrain = new Terrain();
         //float terrainSize = terrain.terrainData.size.x;
         //generateRoadResult = SplineRoadLoader.GenerateRoadPrefab(geojson, tileId, terrainSize, terrain);
@@ -20,17 +20,17 @@ public class Example : MonoBehaviour
         //GameObject roadObj = generateRoadResult.roadObj;
         //string roadFacilityInfo = generateRoadResult.roadFacilityInfo;
 
-        //// ������·Ԫ��Json����
+        //// Parse generated road facility metadata.
         //RoadFacilityData roadFacilityData = SplineRoadLoader.AnalysisRoadFacilityData(roadFacilityInfo);
         //List<FacilityPoint> facilities = roadFacilityData.facilityMarkPoints;
         //#endregion
 
-        //#region ��·���
+        //#region Railway generation
         //string geojson1 = "";
         //UnwrappedTileId tileId1 = new UnwrappedTileId(1, 1, 1);
-        //// ��������������·
+        //// Generate railway mesh without terrain fitting.
         //GenerateRailwayResult generateRailwayResult = SplineRailwayLoader.GenerateRailwayPrefab(geojson1, tileId1);
-        //// ������������·
+        //// Generate railway mesh fitted to terrain.
         //Terrain terrain1 = new Terrain();
         //float terrainSize1 = terrain.terrainData.size.x;
         //generateRailwayResult = SplineRailwayLoader.GenerateRailwayPrefab(geojson1, tileId1, terrainSize1, terrain1);

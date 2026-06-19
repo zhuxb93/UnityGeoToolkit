@@ -9,13 +9,13 @@ public class TestBorder
     [MenuItem("Test/Test1")]
     public static void Test1()
     {
-        string dataPath = Application.dataPath + "/Test/data/�ɶ�-�����-height.geojson";
+        string dataPath = Path.Combine(Application.streamingAssetsPath, "GeoToolkitSamples/synthetic-border-height.geojson");
         if (File.Exists(dataPath))
         {
             string geojson = File.ReadAllText(dataPath);
             GeoPlatformConfig config = ScriptableObject.CreateInstance<GeoPlatformConfig>();
             GeoCoordinateUtils.Initialize(config);
-            Vector2d center = new Vector2d(30.581179257386985f, 103.86474609375f);
+            Vector2d center = new Vector2d(0.0, 0.0);
             double scale = GeoCoordinateUtils.CalculateDistanceRatio((float)Conversions.CalculateTileSize(14), 14);
             Material wallMat = new Material(Shader.Find("HDRP/Lit"));
             wallMat.color = Color.yellow;

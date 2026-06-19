@@ -4,13 +4,13 @@ using GeoToolkit;
 
 public class Route : MonoBehaviour
 {
-    [Header("SDK�����ļ�")]
+    [Header("SDK configuration")]
     public GeoPlatformConfig config;
-    [Header("Geojson�ļ���StreamingAssetsĿ¼�µ����·��")]
+    [Header("GeoJSON path relative to StreamingAssets")]
     public string filePath;
-    [Header("�������ڲ㼶")]
+    [Header("Output layer mask")]
     public LayerMask layerMask;
-    [Header("·��������")]
+    [Header("Route material")]
     public Material routMat;
 
     private void Start()

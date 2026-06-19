@@ -3,23 +3,23 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>
-/// ������ XZ ƽ�������ƥ�����������ڵ��Ρ�����ƥ�䣩
+/// Matches points on the XZ plane and samples the nearest source Y value.
 /// </summary>
 public class XZNearestMatcher
 {
-    private readonly List<Vector3> _points;           // ԭʼ�㼯
-    private readonly Dictionary<long, List<int>> _grid; // Grid Hash: key -> �������б�
+    private readonly List<Vector3> _points;           // Source points.
+    private readonly Dictionary<long, List<int>> _grid; // Grid hash: key -> point indices.
     private readonly float _cellSize;
-    private readonly Vector2 _minBounds;             // ���� grid �������
+    private readonly Vector2 _minBounds;             // Minimum bounds used as the grid origin.
 
     public int TotalPoints => _points.Count;
     public float CellSize => _cellSize;
 
     /// <summary>
-    /// ���캯���������ռ���������
+    /// Builds a spatial index for nearest-height lookup.
     /// </summary>
-    /// <param name="points">�ο����б����� DEM�����ε㣩</param>
-    /// <param name="cellSize">�����С�����飺���ηֱ��ʵ� 1~2 ����</param>
+    /// <param name="points">Reference points, such as DEM or terrain samples.</param>
+    /// <param name="cellSize">Grid cell size. Use roughly one to two terrain sample intervals.</param>
     public XZNearestMatcher(List<Vector3> points, float cellSize = 10.0f)
     {
         _points = points ?? throw new ArgumentNullException(nameof(points));
@@ -28,7 +28,7 @@ public class XZNearestMatcher
 
         if (points.Count == 0) return;
 
-        // ����߽磨���� grid ����ƫ�ƣ����ٹ�ϣ��ͻ��
+        // Compute the origin used to offset grid coordinates and reduce hash collisions.
         float minX = float.MaxValue, minZ = float.MaxValue;
         foreach (var p in points)
         {
@@ -37,7 +37,7 @@ public class XZNearestMatcher
         }
         _minBounds = new Vector2(minX, minZ);
 
-        // ������������
+        // Populate the spatial grid.
         BuildGrid();
     }
 
@@ -60,16 +60,16 @@ public class XZNearestMatcher
     {
         long gx = (long)((x - _minBounds.x) / _cellSize);
         long gz = (long)((z - _minBounds.y) / _cellSize);
-        // 64λ��ϣ��ʹ�� Z-order ���߷��ϲ����򵥰棩
+        // Pack two 32-bit grid coordinates into one 64-bit key.
         return (gx << 32) | (gz & 0xFFFFFFFF);
     }
 
     /// <summary>
-    /// �� XZ ƽ���������㣬�������� Y ֵ
+    /// Finds the nearest point on the XZ plane and returns its Y value.
     /// </summary>
-    /// <param name="query">��ѯ��</param>
-    /// <param name="maxSearchDistance">����������루XZ ƽ�棩</param>
-    /// <returns>ƥ��� Y ֵ��δ�ҵ��򷵻� query.y</returns>
+    /// <param name="query">Point to sample.</param>
+    /// <param name="maxSearchDistance">Maximum search distance on the XZ plane.</param>
+    /// <returns>The matched Y value, or query.y when no point is found.</returns>
     public float FindNearestY(Vector3 query, float maxSearchDistance = 100.0f)
     {
         if (_points.Count == 0) return query.y;
@@ -83,7 +83,7 @@ public class XZNearestMatcher
         int centerGridX = (int)((query.x - _minBounds.x) / _cellSize);
         int centerGridZ = (int)((query.z - _minBounds.y) / _cellSize);
 
-        // ������Χ����
+        // Search neighboring grid cells within the configured radius.
         for (int ox = -searchRadius; ox <= searchRadius; ox++)
         {
             for (int oz = -searchRadius; oz <= searchRadius; oz++)
@@ -112,7 +112,7 @@ public class XZNearestMatcher
     }
 
     /// <summary>
-    /// ����ƥ�䣺��Ч���� listB
+    /// Applies nearest-height matching to the target list in place.
     /// </summary>
     public void MatchYValues(List<Vector3> targets, float maxSearchDistance = 100.0f)
     {

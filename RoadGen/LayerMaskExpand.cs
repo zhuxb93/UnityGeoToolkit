@@ -7,7 +7,7 @@ namespace GeoToolkit.Road
     public static class LayerMaskExpand
     {
         /// <summary>
-        /// Editor ״̬ �ɼ������ ���� Layer����Editor�� ������������Layer
+        /// Adds a layer in the editor when it is missing, then assigns it to the object.
         /// </summary>
         /// <param name="go"></param>
         /// <param name="layerName"></param>
@@ -74,7 +74,7 @@ namespace GeoToolkit.Road
         }
 
         /// <summary>
-        /// Editor ״̬ �ɼ������ Tag ��ǩ����Editor�� ������������Tag
+        /// Adds a tag in the editor when it is missing, then assigns it to the object.
         /// </summary>
         /// <param name="go"></param>
         /// <param name="tagName"></param>
