@@ -1,35 +1,36 @@
 # UnityGeoToolkit
 
-[English](README.en.md) · 个人技术积累仓库
+[中文](README.zh-CN.md) · personal portfolio
 
 ![Unity](https://img.shields.io/badge/Unity-6000-black?logo=unity) ![Language](https://img.shields.io/badge/C%23-blue?logo=csharp) ![License](https://img.shields.io/badge/License-MIT-green) ![Purpose](https://img.shields.io/badge/%E7%94%A8%E9%80%94-%E6%8A%80%E6%9C%AF%E7%A7%AF%E7%B4%AF-blueviolet)
 
-UnityGeoToolkit 是一份面向 Unity 6000 的个人地理工具箱仓库，整理地理内容生产和运行时渲染中反复出现的基础能力：64 位原生容器、二进制序列化、双精度地理数学、编辑器导入框架、地形修复、道路生成、雷达体素和场景辅助工具。仓库定位是技术积累，不是完整业务平台；真实项目数据、内网端点、账号密钥、商业美术资源和业务流程壳都已移除或替换为占位说明。
+UnityGeoToolkit is a personal geospatial toolkit archive for Unity 6000. It collects reusable building blocks for geospatial content production and runtime visualization: 64-bit native containers, binary serialization, double-precision geospatial math, editor import frameworks, terrain repair, road generation, radar voxelization, and scene utilities. It is a technical archive rather than a complete business platform.
 
-## 架构
+## Architecture
 
 ```mermaid
+%%{init: {'theme':'base','themeVariables':{'fontFamily':'ui-sans-serif, system-ui, sans-serif','lineColor':'#94A3B8','edgeLabelBackground':'#F8FAFC'}}}%%
 flowchart TB
-    subgraph L1["基础层 · 通用算法与容器"]
-        NC["NativeCollections64<br/>64 位原生容器"]:::own
-        SER["Serialization<br/>二进制序列化"]:::own
-        GM["GeoMath<br/>双精度数学·坐标·瓦片·Delaunay"]:::own
+    subgraph L1["Foundation · Algorithms And Containers"]
+        NC("NativeCollections64<br/>64-bit native containers"):::own
+        SER("Serialization<br/>binary serialization"):::own
+        GM("GeoMath<br/>double math · coordinates · tiles · Delaunay"):::own
     end
-    subgraph L2["编辑器工具层 · 内容生产"]
-        EI["EditorImporter<br/>插件式导入框架"]:::own
-        TR["Terrain<br/>接缝修复·GPU 平滑"]:::own
-        RG["RoadGen<br/>样条路网 / 铁路"]:::own
-        GT["GeoTiff<br/>EXR / 贴花 / 热力图"]:::own
-        GEN["Generators<br/>边界 / 路径 / 热力"]:::own
+    subgraph L2["Editor Tooling · Content Production"]
+        EI("EditorImporter<br/>plugin-style import framework"):::own
+        TR("Terrain<br/>seam repair · GPU smoothing"):::own
+        RG("RoadGen<br/>spline roads / railways"):::own
+        GT("GeoTiff<br/>EXR / decals / heatmaps"):::own
+        GEN("Generators<br/>boundaries / routes / heat"):::own
     end
-    subgraph L3["运行时可视化层"]
-        RV["RadarVoxel"]:::own
-        RE["RadarEnvelope"]:::own
-        CS["ChunkSpawner<br/>GPU 散布·树木风动"]:::own
-        POI["POI 防重叠"]:::own
-        CAM["Camera 控制 / 飞行"]:::own
+    subgraph L3["Runtime Visualization"]
+        RV("RadarVoxel"):::own
+        RE("RadarEnvelope"):::own
+        CS("ChunkSpawner<br/>GPU scatter · tree wind"):::own
+        POI("POI overlap resolver"):::own
+        CAM("Camera control / flight"):::own
     end
-    TN["ThirdParty/TriangleNet (MIT)"]:::third
+    TN("ThirdParty · TriangleNet · MIT"):::third
 
     GM --> EI
     GM --> RG
@@ -39,88 +40,88 @@ flowchart TB
     EI --> TR
     EI --> GT
 
-    classDef own  fill:#0d3b66,stroke:#2f81f7,color:#e6f1ff;
-    classDef third fill:#3b2f63,stroke:#a371f7,color:#f0e9ff;
-    classDef ext  fill:#222b35,stroke:#768390,color:#cdd9e5,stroke-dasharray:4 3;
-    classDef out  fill:#13361f,stroke:#3fb950,color:#d7ffe3;
+    classDef own  fill:#DBEAFE,stroke:#3B82F6,stroke-width:1.5px,color:#1E3A8A;
+    classDef third fill:#EDE9FE,stroke:#8B5CF6,stroke-width:1.5px,color:#5B21B6;
+    classDef ext  fill:#F1F5F9,stroke:#94A3B8,stroke-width:1.5px,color:#334155,stroke-dasharray:4 3;
+    classDef out  fill:#DCFCE7,stroke:#22C55E,stroke-width:1.5px,color:#166534;
 ```
 
-底层是通用容器与地理数学，向上支撑编辑器导入工具链与运行时可视化；`TriangleNet`（MIT）作为第三方三角化能力被路网生成复用。
+The foundation layer provides reusable containers and geospatial math, which support editor import workflows and runtime visualization. `TriangleNet` (MIT) is vendored as the triangulation dependency reused by road generation.
 
-## 亮点导航
+## Highlights
 
-| 模块 | 作用 | 关键技术 / 依赖 |
+| Module | Role | Key Technology / Dependency |
 | --- | --- | --- |
-| `NativeCollections64/` | 支持 `ulong` 长度的 `NativeArray64`、`NativeList64`、`UnsafeList64`，并提供 `IJobParallelFor64` 调度接口。 | Burst, unsafe collections, 64-bit indexing |
-| `Serialization/` | 面向大体量缓存和瓦片数据的高性能二进制序列化工具，包含 unsafe 直存路径。 | Binary IO, unsafe write path |
-| `GeoMath/` | 双精度向量、经纬度/墨卡托/瓦片行列号转换、瓦片 ID 和 Delaunay 基础算法。 | double precision, Web Mercator, Delaunay |
-| `EditorImporter/` | 插件式编辑器导入框架，包含导入器骨架、通用窗口和文件/材质/瓦片坐标工具。 | Unity Editor, importer framework |
-| `Terrain/` | 相邻地形瓦片接缝检测、修复和高度平滑。 | compute shader, seam fix |
-| `RoadGen/` | 基于 Unity Splines 的道路/铁路网格生成、交叉口拼接和手绘道路工具。 | Unity Splines, Triangle.NET |
-| `RadarVoxel/` 与 `RadarEnvelope/` | 雷达探测体素化和半球/扇形/环形扫描包络可视化。 | voxel mesh, scan envelope |
-| `ChunkSpawner/`、`POI/`、`Camera/` | 分块散布、POI 防重叠、相机控制与飞行工具。 | GPU scatter, layout, camera rig |
+| `NativeCollections64/` | `NativeArray64`, `NativeList64`, and `UnsafeList64` with `ulong` length support plus `IJobParallelFor64`. | Burst, unsafe collections, 64-bit indexing |
+| `Serialization/` | High-performance binary serialization for large caches and tile-like data, including unsafe direct-write paths. | Binary IO, unsafe write path |
+| `GeoMath/` | Double-precision vectors, lon/lat, Web Mercator, tile row/column conversion, tile IDs, and Delaunay basics. | double precision, Web Mercator, Delaunay |
+| `EditorImporter/` | Plugin-style editor import framework with importer skeletons, windows, and file/material/tile-coordinate utilities. | Unity Editor, importer framework |
+| `Terrain/` | Detection, repair, and smoothing for seams between adjacent terrain tiles. | compute shader, seam fix |
+| `RoadGen/` | Unity Splines based road and railway mesh generation, intersection stitching, and hand-drawn tools. | Unity Splines, Triangle.NET |
+| `RadarVoxel/` and `RadarEnvelope/` | Radar detection voxelization and hemisphere/fan/ring scan-envelope visualization. | voxel mesh, scan envelope |
+| `ChunkSpawner/`, `POI/`, `Camera/` | Chunked object spawning, POI overlap resolution, and camera flight utilities. | GPU scatter, layout, camera rig |
 
-## 预览
+## Preview
 
-| 计划展示 | 文件名（放入 `docs/images/`） | 内容说明 |
+| Planned View | File Name (place in `docs/images/`) | Description |
 | --- | --- | --- |
-| 地形接缝修复 | `terrain-seamfix.gif` | 相邻瓦片接缝修复前后对比 |
-| 路网生成 | `roadgen.gif` | 样条道路 / 交叉口网格生成 |
-| 雷达包络 | `radar-envelope.gif` | 半球 / 扇形 / 环形扫描可视化 |
-| 导入器 | `editor-importer.png` | 编辑器导入框架窗口截图 |
+| Terrain seam repair | `terrain-seamfix.gif` | Before/after comparison for adjacent terrain seams |
+| Road generation | `roadgen.gif` | Spline roads and intersection mesh generation |
+| Radar envelope | `radar-envelope.gif` | Hemisphere, fan, and ring scan visualization |
+| Importer | `editor-importer.png` | Editor import framework window screenshot |
 
-<!-- 补图后取消注释：
+<!-- Uncomment after adding media:
 <p align="center">
   <img src="docs/images/terrain-seamfix.gif" width="720" alt="terrain seam fix preview"><br/>
-  <em>图：地形接缝修复前后对比</em>
+  <em>Figure: before/after comparison for terrain seam repair</em>
 </p>
 -->
 
-## 目录结构
+## Directory Structure
 
 ```text
 UnityGeoToolkit/
-├── NativeCollections64/  # 64 位 Burst 原生容器
-├── Serialization/        # 二进制序列化
-├── GeoMath/              # 双精度数学 / 坐标 / Delaunay
-├── EditorImporter/       # 插件式编辑器导入框架
-├── Terrain/              # 接缝修复 / GPU 平滑
-├── RoadGen/              # 样条路网 / 铁路
-├── GeoTiff/ Generators/  # GeoTiff 处理 / 几何生成
-├── RadarVoxel/ RadarEnvelope/  # 雷达体素 / 扫描包络
+├── NativeCollections64/  # 64-bit Burst native containers
+├── Serialization/        # binary serialization
+├── GeoMath/              # double math / coordinates / Delaunay
+├── EditorImporter/       # plugin-style editor import framework
+├── Terrain/              # seam repair / GPU smoothing
+├── RoadGen/              # spline roads / railways
+├── GeoTiff/ Generators/  # GeoTiff processing / geometry generation
+├── RadarVoxel/ RadarEnvelope/  # radar voxel / scan envelope
 ├── ChunkSpawner/ POI/ Camera/  Utils/
 ├── ThirdParty/TriangleNet/     # Triangle.NET (MIT)
 └── package.json
 ```
 
-## 安装与依赖
+## Installation And Dependencies
 
-1. 在 Unity Package Manager 中选择 `Add package from disk...`，指向本目录的 `package.json`。
-2. 使用 Unity 6000 或兼容版本。
-3. 安装 `package.json` 中声明的依赖，尤其是 `mathematics`、`burst`、`collections`、`newtonsoft-json` 和 `com.unity.splines`。
-4. 本仓不包含真实地理数据或在线服务。示例建议从 `Samples~/README.md` 中的合成样条、合成瓦片和公开坐标开始。
+1. In Unity Package Manager, choose `Add package from disk...` and select this repository's `package.json`.
+2. Use Unity 6000 or a compatible version.
+3. Install the dependencies declared in `package.json`, especially `mathematics`, `burst`, `collections`, `newtonsoft-json`, and `com.unity.splines`.
+4. This repository does not include real geospatial data or online services. Start with the synthetic splines, synthetic tiles, and public-coordinate examples described in `Samples~/README.md`.
 
-## 使用建议
+## Usage Notes
 
-如果只想看核心亮点，建议先读 `NativeCollections64/` 和 `GeoMath/`。如果要搭建地理内容导入工具链，再从 `EditorImporter/`、`Terrain/` 和 `RoadGen/` 开始；雷达相关可从 `RadarVoxel/` 与 `RadarEnvelope/` 进入。
+If you only want the core technical pieces, start with `NativeCollections64/` and `GeoMath/`. If you are building a geospatial content import pipeline, continue with `EditorImporter/`, `Terrain/`, and `RoadGen/`; radar-related modules start at `RadarVoxel/` and `RadarEnvelope/`.
 
-## 许可与脱敏
+## Licensing And Sanitization
 
-- 私有品牌命名、业务地名、真实坐标清单、内网地址、密钥和商业资源均已清理。
-- `LICENSE` 仅覆盖本人原创和改写部分。
-- Triangle.NET、Unity 官方包和 Newtonsoft Json 等第三方依赖按各自许可使用，详情见 `THIRD_PARTY_NOTICES.md`。
-- 复核记录见 `脱敏复核报告.md`。
+- Private brand names, business place names, real coordinate lists, internal URLs, credentials, and commercial assets have been removed.
+- `LICENSE` only covers original or rewritten code in this repository.
+- Triangle.NET, Unity packages, and Newtonsoft Json remain governed by their own licenses. See `THIRD_PARTY_NOTICES.md`.
+- See `脱敏复核报告.md` for the sanitization review.
 
-## 相关仓库
+## Related Repositories
 
-同一套地理三维工程经验的三个方向，可对照阅读：
+These three repositories describe different directions of the same geospatial 3D engineering experience:
 
-- [CesiumforUnitySDK](https://github.com/zhuxb93/CesiumforUnitySDK) — Unity / C#，Cesium 生态下的矢量瓦片渲染与 GPU 实例化。
-- **[UnityGeoToolkit](https://github.com/zhuxb93/UnityGeoToolkit)** — Unity / C#，地理编辑器导入框架与地形 / 路网 / 雷达工具链。
-- [CesiumforUnrealSDK](https://github.com/zhuxb93/CesiumforUnrealSDK) — Unreal / C++，地球相机与矢量瓦片插件。
+- [CesiumforUnitySDK](https://github.com/zhuxb93/CesiumforUnitySDK) — Unity / C#, vector-tile rendering and GPU instancing in the Cesium ecosystem.
+- **[UnityGeoToolkit](https://github.com/zhuxb93/UnityGeoToolkit)** — Unity / C#, geospatial editor import framework plus terrain / road / radar tooling.
+- [CesiumforUnrealSDK](https://github.com/zhuxb93/CesiumforUnrealSDK) — Unreal / C++, globe camera and vector-tile plugin.
 
-对照点：矢量瓦片渲染（Unity C# ↔ Unreal C++ 双实现）；地理坐标数学（`GeoMath` ↔ `CoordinateConverter`）；相机运镜（关键帧录播 ↔ 地球相机控制器）。
+Comparison points: vector-tile rendering (Unity C# ↔ Unreal C++); geospatial coordinate math (`GeoMath` ↔ `CoordinateConverter`); camera motion (keyframe playback ↔ globe camera controller).
 
-## 当前状态
+## Current Status
 
-本仓已完成模块抽取、中文模块说明、英文同步文档、第三方许可清单和脱敏复核。尚未在 Unity Editor 中完成真实导入编译，公开使用前建议先在 Unity 6000 工程中跑一轮本地包导入验证。
+The module extraction, Chinese module notes, synchronized English README, third-party notices, and sanitization review are complete. The package has not yet been imported and compiled in Unity Editor; run a Unity 6000 local package import before production use.
